@@ -4,43 +4,38 @@ import jakarta.persistence.*;
 import java.time.LocalDate;
 
 @Entity
-public class Checkout {
-
-    @Id
+public class Checkout {   @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
-    @Column(nullable = false)
+    private Long bookId;
     private Long memberId;
-
-    @Column(nullable = false)
-    private String itemCode;
-
-    @Column(nullable = false)
+    private String action;
     private LocalDate checkoutDate;
 
-    private LocalDate returnDueDate;
-
-    private LocalDate returnDate;
-
-    // Default constructor
     public Checkout() {
     }
 
-    public Checkout(Long memberId, String itemCode, LocalDate checkoutDate, LocalDate returnDueDate) {
+    public Checkout(Long bookId, Long memberId, String action, LocalDate checkoutDate) {
+        this.bookId = bookId;
         this.memberId = memberId;
-        this.itemCode = itemCode;
+        this.action = action;
         this.checkoutDate = checkoutDate;
-        this.returnDueDate = returnDueDate;
     }
 
-    // Getters and setters
     public Long getId() {
         return id;
     }
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public Long getBookId() {
+        return bookId;
+    }
+
+    public void setBookId(Long bookId) {
+        this.bookId = bookId;
     }
 
     public Long getMemberId() {
@@ -51,12 +46,12 @@ public class Checkout {
         this.memberId = memberId;
     }
 
-    public String getItemCode() {
-        return itemCode;
+    public String getAction() {
+        return action;
     }
 
-    public void setItemCode(String itemCode) {
-        this.itemCode = itemCode;
+    public void setAction(String action) {
+        this.action = action;
     }
 
     public LocalDate getCheckoutDate() {
@@ -65,21 +60,5 @@ public class Checkout {
 
     public void setCheckoutDate(LocalDate checkoutDate) {
         this.checkoutDate = checkoutDate;
-    }
-
-    public LocalDate getReturnDueDate() {
-        return returnDueDate;
-    }
-
-    public void setReturnDueDate(LocalDate returnDueDate) {
-        this.returnDueDate = returnDueDate;
-    }
-
-    public LocalDate getReturnDate() {
-        return returnDate;
-    }
-
-    public void setReturnDate(LocalDate returnDate) {
-        this.returnDate = returnDate;
     }
 }
