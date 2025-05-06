@@ -1,16 +1,27 @@
-# Use an official OpenJDK runtime as a parent image
-FROM openjdk:17-jdk-slim
+# Use an official Maven image as the build stage
+FROM maven:3.8.7-eclipse-temurin-17 AS build
 
-# Set the working directory in the container
+# Set the working directory inside the container
 WORKDIR /app
 
-# Copy the packaged Spring Boot application JAR file into the container
-# Replace 'book-service-0.0.1-SNAPSHOT.jar' with the actual name of your built JAR file
-COPY target/checkout-return-service-0.0.1-SNAPSHOT.jar app.jar
+# Copy the Maven project files to the container
+COPY pom.xml .
+COPY src ./src
 
-# Expose the port the Book Service application runs on
-# Replace 8081 with the actual server.port configured in your book-service's application.properties
-EXPOSE 8084
+# Build the application
+RUN mvn clean package -DskipTests
 
-# Define the command to run the Spring Boot application
-ENTRYPOINT ["java", "-jar", "app.jar"]
+# Use an official OpenJDK image as the runtime stage
+FROM eclipse-temurin:17-jdk
+
+# Set the working directory inside the container
+WORKDIR /app
+
+# Copy the built JAR file from the build stage
+COPY --from=build /app/target/*.jar app.jar
+
+# Expose the port your application runs on
+EXPOSE 8080
+
+# Command to run the application
+CMD ["java", "-jar", "app.jar"]
